@@ -1,14 +1,15 @@
 <?
 // Navigation Bar // Book Table of contents
+require_once("./model/api.php");
+// get Main Titles (Chapters)
+$titles=getUserTextLevel1($_SESSION['userdata']['id'],"title");
 
-
-$q="select title , count(*) from passage group by title order by title";
-$tl=$con->query($q);
 echo "<ul class='nav nav-list '>";
-while($tll=$tl->fetch_array())
+foreach($titles as $k=>$tll)
 {
 	echo "<li> <label class='tree-toggler nav-header' dir='ltr' style='color:#515151;font-size:11pt;'><i class='icon-chevron-right'></i> ".$tll[0]." (".$tll[1].") </label>\n<ul class='nav nav-list tree' style='display: none;'>";
 	// get titles Level 1
+	
 	$q="select titleL1 , count(*) from passage where title='".$tll[0]."' group by titleL1 order by id";
 	$res=$con->query($q);
 	while($row=$res->fetch_array())

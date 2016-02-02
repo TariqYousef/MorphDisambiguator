@@ -227,7 +227,52 @@ function getMorph($word)
 }
 
 
+//*******************************************************
+// get user statitics: #Passages , Words count			*
+// Input: User's Id										*
+//*******************************************************
+function getUserStatistics($userId)
+{
+ global $con;
+ // get number of passages
+ $q="select count(*) from passage where userid=$userId";
+ $return['numOfPassages']=$con->query($q)->fetch_array()[0];
+ // get number of words
+ $q="SELECT count(word) FROM words,passage where words.passage_id = passage.id and passage.userid=$userId ";
+ $return['numOfWords']=$con->query($q)->fetch_array()[0];
+ 
+ return $return;
+}
 
+//*******************************************************
+// save User Login Information to DB					*
+// Input: User's id, user's ip 							*
+//*******************************************************
+function saveUserLoginInformation($userId,$ip)
+{
+ global $con;
+ $q="update users set ip='".$ip."' , lastlogin=now() where id=$userId";
+ $con->query($q);
+}
+//******************************************************
+
+//*******************************************************
+// get user statitics: #Passages , Words count			*
+// Input: User's Id										*
+//*******************************************************
+function getUserTextLevel1($userId)
+{
+ global $con;
+ $q="select title , count(*) from passage where userid=$userId group by title order by title";
+ $tl=$con->query($q);
+ $i=0;
+ while($row=$tl->fetch_array())
+ {
+  $return[$i]=$row;
+  $i++;
+ }
+ return $return;
+}
 
 
 ?>
